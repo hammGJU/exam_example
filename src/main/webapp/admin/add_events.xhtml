@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>#{msgs.add_event}</title>
+    </h:head>
+    <h:body>
+        <ui:decorate template="/app_templates/app_template.xhtml">
+            <h:form id="addForm">
+                <p:messages id="msgs" closable="true" globalOnly="true"/>
+                <p:panel header="#{msgs.events_info}"
+                         style="min-height: 500px; direction: #{langBean.dir}; margin-top: 10px; font-size: 10pt">
+                    <h:panelGrid style="float: #{langBean.styleFloat}"
+                                 columns="3" dir="#{langBean.dir}">
+                        <p:outputLabel value="#{msgs.event_name_en}:" for="even_name_en"/>
+                        <p:inputText id="even_name_en" style="width:600px"
+                                     value="#{updateEventBean.event.nameEn}"
+                                     required="true" maxlength="300" requiredMessage="#{msgs.required_msg}">
+                        </p:inputText>
+                        <h:message for="even_name_en" styleClass="errorMsg"/>
+
+                        <p:outputLabel value="#{msgs.event_name_ar}:" for="even_name_ar"/>
+                        <p:inputText id="even_name_ar" style="width:600px"
+                                     value="#{updateEventBean.event.nameAr}"
+                                     required="true" maxlength="300" requiredMessage="#{msgs.required_msg}">
+                        </p:inputText>
+                        <h:message for="even_name_ar" styleClass="errorMsg"/>
+
+                        <p:outputLabel value="#{msgs.event_type}" for="even_type"/>
+                        <p:selectOneMenu value="#{updateEventBean.eventTypeId}" id="even_type"
+                                         required="true" requiredMessage="#{msgs.required_msg}">
+                            <f:selectItem itemLabel="#{msgs.select_one}" itemValue=""/>
+                            <f:selectItems value="#{updateEventBean.typesList}" var="type"
+                                           itemLabel="#{langBean.isEnglish?type.nameEn:type.nameAr}"
+                                           itemValue="#{type.typeId}"/>
+                        </p:selectOneMenu>
+                        <h:message for="even_type" styleClass="errorMsg"/>
+
+                        <p:outputLabel value="#{msgs.event_place} (EN):" for="even_place_en"/>
+                        <p:inputText id="even_place_en" value="#{updateEventBean.event.placeEn}"
+                                     required="true" maxlength="300" requiredMessage="#{msgs.required_msg}">
+                        </p:inputText>
+                        <h:message for="even_place_en" styleClass="errorMsg"/>
+
+                        <p:outputLabel value="#{msgs.event_place} (AR):" for="even_place_ar"/>
+                        <p:inputText id="even_place_ar" value="#{updateEventBean.event.placeAr}"
+                                     required="true" maxlength="300" requiredMessage="#{msgs.required_msg}">
+                        </p:inputText>
+                        <h:message for="even_place_ar" styleClass="errorMsg"/>
+
+                        <p:outputLabel value="#{msgs.event_time}:" for="even_date"/>
+                        <p:calendar id="even_date" value="#{updateEventBean.event.eventDate}"
+                                    required="true" requiredMessage="#{msgs.required_msg}"
+                                    dir="#{ltr}" pattern="yyyy-MM-dd HH:mm"
+                                    yearRange="c-10:c+1" navigator="true" />
+                        <h:message for="even_date" styleClass="errorMsg"/>
+
+                        <p:outputLabel value="#{msgs.event_capac}:" for="even_capac"/>
+                        <p:inputText id="even_capac" value="#{updateEventBean.event.capacity}"
+                                     required="true" requiredMessage="#{msgs.required_msg}"
+                                     converterMessage="#{msgs.capac_msg}" 
+                                     validatorMessage="#{msgs.capac_msg}">
+                            <f:validateLongRange minimum="0" maximum="1000"/>
+                        </p:inputText>
+                    </h:panelGrid>
+                </p:panel>
+                <p:commandButton value="#{msgs.add_event}" icon="ui-icon-disk"
+                                 iconPos="#{langBean.styleFloat}" styleClass="commandButton"
+                                 style="float: #{langBean.styleFloat}"
+                                 disabled="false" ajax="false"
+                                 actionListener="#{updateEventBean.insertNewEvent()}"/>
+                
+                <p:commandButton value="#{msgs.cancel}" icon="ui-icon-cancel"
+                                 iconPos="#{langBean.styleFloat}" styleClass="commandButton"
+                                 style="float: #{langBean.styleFloat}"
+                                 disabled="false" ajax="false"
+                                 immediate="true"
+                                 action="/admin/admin_first_page"/>
+
+            </h:form>
+        </ui:decorate>
+    </h:body>
+</html>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html  xmlns="http://www.w3.org/1999/xhtml"
+       xmlns:h="http://xmlns.jcp.org/jsf/html"
+       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+       xmlns:p="http://primefaces.org/ui"
+       xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>#{msgs.welcome_msg}</title>
+    </h:head>
+    <h:body>
+        <ui:decorate template="/app_templates/app_template.xhtml">
+            <h:form id="eventsForm">
+                <p:dataTable id="eventsTable" value="#{eventBean.eventsList}" var="events"
+                             selection="#{eventBean.selectedEvent}" rowKey="#{events.eventId}"
+                             rowsPerPageTemplate="2, 4, 8, 16" emptyMessage="#{msgs.table_empty}"
+                             paginator="true" paginatorPosition="top" 
+                             dir="#{langBean.dir}"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             >
+                    <p:ajax event="rowSelectRadio" update=":eventsForm:eventsTable"/>
+                    <f:facet name="header" id="eventsHeader">
+                        #{msgs.msg_events}
+                    </f:facet>
+                    <p:column selectionMode="single" style="width: 5%" />
+                    <p:column headerText="#{msgs.event_name}" style="width: 20%"
+                              filterBy="#{langBean.isEnglish?events.nameEn:events.nameAr}" 
+                              sortBy="#{langBean.isEnglish?events.nameEn:events.nameAr}"
+                              filterMatchMode="contains">
+                        <h:outputText value="#{langBean.isEnglish?events.nameEn:events.nameAr}"/>
+                    </p:column>
+                    <p:column headerText="#{msgs.event_capac}" style="width: 20%"
+                              filterBy="#{events.capacity}" sortBy="#{events.capacity}"
+                              filterMatchMode="contains">
+                        <h:outputText value="#{events.capacity}"/>
+                    </p:column>
+                    <p:column headerText="#{msgs.event_type}" style="width: 20%"
+                              filterBy="#{langBean.isEnglish?events.type.nameEn:events.type.nameAr}"
+                              sortBy="#{langBean.isEnglish?events.type.nameEn:events.type.nameAr}"
+                              filterMatchMode="contains">
+                        <h:outputText value="#{langBean.isEnglish?events.type.nameEn:events.type.nameAr}"/>
+                    </p:column>
+                    <p:column headerText="#{msgs.event_place}" style="width: 20%"
+                              filterBy="#{langBean.isEnglish?events.placeEn:events.placeAr}"
+                              sortBy="#{langBean.isEnglish?events.placeEn:events.placeAr}"
+                              filterMatchMode="contians">
+                        <h:outputText value="#{langBean.isEnglish?events.placeEn:events.placeAr}"/>
+                    </p:column>
+                    <p:column headerText="#{msgs.event_time}" style="width: 20%"
+                              filterBy="#{events.eventDate}" sortBy="#{events.eventDate}"
+                              filterMatchMode="contains">
+                        <h:outputText value="#{events.eventDate}"/>
+                    </p:column>
+                    <f:facet name="footer" id="eventFooter">
+                        <p:toolbar style="border: none">
+                            <p:toolbarGroup align="#{langBean.screenLeft}">
+                                <p:commandButton value="#{msgs.edit}" icon="ui-icon-pencil"
+                                                 iconPos="#{langBean.styleFloat}" styleClass="commandButton"
+                                                 style="float: #{langBean.styleFloat}"
+                                                 disabled="#{eventBean.selectedEvent==null}"
+                                                 actionListener="#{eventBean.sendSelectedItemIdToSession()}"
+                                                 action="/admin/edit_events"/>
+                                <p:commandButton value="#{msgs.delete}" icon="ui-icon-minus"
+                                                 iconPos="#{langBean.styleFloat}" styleClass="commandButton"
+                                                 style="float: #{langBean.styleFloat}"
+                                                 ajax="true"
+                                                 disabled="#{eventBean.selectedEvent==null}"
+                                                 actionListener="#{eventBean.deleteEvent()}"
+                                                 update="eventsTable"
+                                                 action="admin_first_page">
+                                    <p:confirm header="#{msgs.confirm_delete}" message="#{msgs.confirm_delte}"
+                                               icon="ui-icon-alert"/>
+                                </p:commandButton>
+                                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                    <p:commandButton value="#{msgs.delete}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                    <p:commandButton value="#{msgs.cancel}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                                </p:confirmDialog>
+
+                            </p:toolbarGroup>
+                        </p:toolbar>
+                    </f:facet>
+                </p:dataTable>
+                <p:toolbar style="border: none">
+                    <p:toolbarGroup align="#{langBean.screenLeft}">
+                        <p:commandButton value="#{msgs.add_event}" icon="ui-icon-plus"
+                                         iconPos="#{langBean.styleFloat}" styleClass="commandButton"
+                                         style="float: #{langBean.styleFloat}"
+                                         action="/admin/add_events"/>
+                    </p:toolbarGroup>
+                </p:toolbar>
+            </h:form>
+        </ui:decorate>
+    </h:body>
+</html>
